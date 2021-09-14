@@ -1,10 +1,15 @@
-const mysql = require('mysql'); // mysql 모듈 로드
-const conn = { // mysql 접속 설정
+const mysql = require("mysql2/promise");
+const { logger } = require("./winston");
+
+// TODO: 본인의 DB 계정 입력
+const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
+    port: "3306",
     password: '',
-    database: 'test'
-};
+    database: 'test',
+});
 
-// config/database.js
-module.exports = conn;
+module.exports = {
+    pool: pool,
+};
