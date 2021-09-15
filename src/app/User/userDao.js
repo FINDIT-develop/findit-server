@@ -71,12 +71,12 @@ async function selectUserAccount(connection, email) {
     return selectUserAccountRow[0];
 }
 
-async function updateUserInfo(connection, id, nickname) {
+async function updateUserInfo(connection, id, name) {
     const updateUserQuery = `
     UPDATE UserInfo 
     SET name = ?
     WHERE id = ?;`;
-    const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
+    const updateUserRow = await connection.query(updateUserQuery, [name, id]);
     return updateUserRow[0];
 }
 

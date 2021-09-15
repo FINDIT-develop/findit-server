@@ -25,9 +25,9 @@ exports.getTest = async function(req, res) {
 exports.postUsers = async function(req, res) {
 
     /**
-     * Body: email, password, nickname
+     * Body: email, password, name
      */
-    const { email, password, nickname } = req.body;
+    const { email, password, name } = req.body;
 
     // 빈 값 체크
     if (!email)
@@ -47,7 +47,7 @@ exports.postUsers = async function(req, res) {
     const signUpResponse = await userService.createUser(
         email,
         password,
-        nickname
+        name
     );
 
     return res.send(signUpResponse);
@@ -119,7 +119,7 @@ exports.login = async function(req, res) {
  * API Name : 회원 정보 수정 API + JWT + Validation
  * [PATCH] /app/users/:userId
  * path variable : userId
- * body : nickname
+ * body : name
  */
 exports.patchUsers = async function(req, res) {
 
@@ -128,14 +128,14 @@ exports.patchUsers = async function(req, res) {
     const userIdFromJWT = req.verifiedToken.userId
 
     const userId = req.params.userId;
-    const nickname = req.body.nickname;
+    const name = req.body.name;
 
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
     } else {
-        if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
+        if (!name) return res.send(errResponse(baseResponse.USER_name_EMPTY));
 
-        const editUserInfo = await userService.editUser(userId, nickname)
+        const editUserInfo = await userService.editUser(userId, name)
         return res.send(editUserInfo);
     }
 };
