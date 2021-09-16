@@ -80,6 +80,19 @@ async function updateUserInfo(connection, id, name) {
     return updateUserRow[0];
 }
 
+//jwt token 업데이트
+async function updateJwtToken(connection, updateJwtTokenParams) {
+    const updateJwtTokenQuery = `
+  UPDATE Jwt SET token=?, status=0 where id=?
+  `;
+    const updateJwtTokenRow = await connection.query(
+        updateJwtTokenQuery,
+        updateJwtTokenParams
+    );
+    return updateJwtTokenRow;
+}
+
+
 
 module.exports = {
     selectUser,
@@ -89,4 +102,5 @@ module.exports = {
     selectUserPassword,
     selectUserAccount,
     updateUserInfo,
+    updateJwtToken
 };
