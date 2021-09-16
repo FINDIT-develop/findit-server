@@ -13,7 +13,7 @@ const { connect } = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function(email, password, name) {
+exports.createUser = async function(email, password, name, phone) {
     try {
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
@@ -26,14 +26,14 @@ exports.createUser = async function(email, password, name) {
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, name];
+        const insertUserInfoParams = [email, hashedPassword, name, phone];
 
         const connection = await pool.getConnection(async(conn) => conn);
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
         connection.release();
-        return response(baseResponse.SUCCESS);
+        return response(baseResponse.SUCCESS, { userIdx: userIdResult[0].insertId, });
 
 
     } catch (err) {
@@ -95,6 +95,57 @@ exports.postSignIn = async function(email, password) {
     }
 };
 
+//자동 로그인
+exports.postAutoSignIn = async function(userId) {
+    try {
+        // 계정 상태 확인
+        const userInfoRows = await userProvider.retrieveUser(userId);
+        if (userInfoRows.length < 1)
+            return errResponse(baseResponse.USER_ID_NOT_EXIST);
+        if (userInfoRows.status === 1)
+            return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
+
+        //로그인 테이블 확인
+        const loginRows = await userProvider.retrieveLogin(userId);
+
+        if (loginRows[0].length < 1)
+            return errResponse(baseResponse.USER_LOGIN_EMPTY);
+        if (loginRows[0][0].status === 1)
+            return errResponse(baseResponse.USER_LOGIN_EMPTY);
+
+        //토큰 생성 Service
+        let token = await jwt.sign({
+                userId: userInfoRows.id,
+            }, // 토큰의 내용(payload)
+            secret_config.jwtsecret, // 비밀키
+            {
+                expiresIn: "365d",
+                subject: "userInfo",
+            } // 유효 기간 365일
+        );
+
+        //로그인 추가
+        const loginParams = [token, userId];
+        const connection = await pool.getConnection(async(conn) => conn);
+        const loginResult = await userDao.updateJwtToken(connection, loginParams);
+        connection.release();
+
+        return response(baseResponse.SUCCESS, {
+            userIdx: userInfoRows.id,
+            jwt: token,
+        });
+    } catch (err) {
+        logger.error(
+            `App - postAutoSignIn Service error\n: ${err.message} \n${JSON.stringify(
+          err
+        )}`
+        );
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+
+// 유저 정보 수정
 exports.editUser = async function(id, name) {
     try {
         console.log(id)
