@@ -1,3 +1,4 @@
+const baseResponseStatus = require("../../../config/baseResponseStatus");
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
@@ -39,6 +40,24 @@ exports.emailCheck = async function(email) {
     return emailCheckResult;
 };
 
+exports.naverEmailCheck = async function (email) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const emailCheckResult = await userDao.selectNaverUserEmail(
+      connection,
+      email
+    );
+    connection.release();
+  
+    return emailCheckResult;
+  };
+  exports.emailVerifyCheck = async function (email) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    connection.release();
+  
+    return emailCheckResult;
+  };
+
+  
 exports.passwordCheck = async function(selectUserPasswordParams) {
     const connection = await pool.getConnection(async(conn) => conn);
     const passwordCheckResult = await userDao.selectUserPassword(
@@ -56,7 +75,13 @@ exports.accountCheck = async function(email) {
 
     return userAccountResult;
 };
-
+exports.loginCheck = async function (userId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const loginResult = await userDao.selectLoginUser(connection, userId);
+    connection.release();
+  
+    return loginResult;
+  };
 exports.retrieveLogin = async function(userId) {
     const connection = await pool.getConnection(async(conn) => conn);
     const loginResult = await userDao.selectLoginUser(connection, userId);
@@ -64,3 +89,22 @@ exports.retrieveLogin = async function(userId) {
 
     return loginResult;
 };
+
+exports.retrieveUserInfo = async function (userId) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const userInfoResult = await userDao.selectUserInfo(connection, userId);
+    connection.release();
+  
+    return userInfoResult[0];
+  };
+  exports.retrieveUserProfile = async function (userId, userIdFromJWT) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const userInfoResult = await userDao.selectUserProfile(
+      connection,
+      userId,
+      userIdFromJWT
+    );
+    connection.release();
+  
+    return userInfoResult[0];
+  };

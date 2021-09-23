@@ -17,15 +17,36 @@ module.exports = function(app) {
     // 로그인 하기 API(JWT 생성)
     app.post('/app/login', user.login);
 
+    //회원가입 - 이메일, 비밀번호 확인
+    app.post("/app/users/check", user.postUsersCheck);
+
+    //네이버 로그인
+    app.post("/app/login/naver", user.naverLogin);
+
     // 자동로그인
     app.get("app/login/auto", jwtMiddleware, user.autoLogin)
+
+      //로그아웃
+    app.patch("/app/logout", jwtMiddleware, user.logout);
+
+    //사용자 프로필(마이페이지 조회) 조회
+    app.get("/app/users/:userId", user.getUser);
 
     //회원 정보 수정 API(JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
     app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers)
 
-    // JWT 검증 APIx
-    app.get('/app/auto-login', jwtMiddleware, user.check);
+    //인증문자 전송
+    app.post("/app/users/sms-send", user.postPhoneCheck);
 
+    //휴대폰인증
+    app.post("/app/users/sms-verify", user.phoneCheck);
+
+    // 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
+    app.patch("/app/users/:userId", jwtMiddleware, user.patchUsers);
+
+
+    // 회원탈퇴 API
+    app.patch("/app/users/:userId/status", jwtMiddleware, user.patchUserStatus);
 
 };
 
