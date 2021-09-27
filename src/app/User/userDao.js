@@ -26,7 +26,7 @@ async function selectUserId(connection, userId) {
     const selectUserIdQuery = `
                    SELECT id, email, name 
                    FROM user 
-                   WHERE id = ?;
+                   WHERE id = '?';
                    `;
     const [userRow] = await connection.query(selectUserIdQuery, userId);
     return userRow;
@@ -88,71 +88,72 @@ async function updateEmailVerify(connection, email) {
     WHERE email = ?;`;
     const updateEmailRow = await connection.query(updateEmailQuery, email);
     return updateEmailRow[0];
-  }
-  
-  
-  //네이버 로그인
-  async function insertNaverUser(connection, insertUserParams) {
+}
+
+
+//네이버 로그인
+async function insertNaverUser(connection, insertUserParams) {
     const insertEmailQuery = `
     INSERT INTO User(userEmail, name, phone, profileImg, loginType)
     VALUES(?, ?, ?, ?, 1);
     `;
     const insertEmailRow = await connection.query(
-      insertEmailQuery,
-      insertUserParams
+        insertEmailQuery,
+        insertUserParams
     );
     return insertEmailRow;
-  }
+}
 
 //login user 조회
 async function selectLoginUser(connection, userId) {
     const selectJwtQuery = `
-    SELECT userId, status FROM Jwt WHERE userId=?;
+    SELECT userId, status FROM Jwt WHERE userId='?';
     `;
     const selectJwtRow = await connection.query(selectJwtQuery, userId);
     return selectJwtRow;
-  }
-  //login 추가
-  async function insertLoginUser(connection, updateJwtTokenParams) {
+}
+
+//login 추가
+async function insertLoginUser(connection, updateJwtTokenParams) {
     const insertJwtQuery = `
-    INSERT INTO Jwt(token, userId) VALUES(?,?);
+    INSERT INTO Jwt(token, userId) VALUES(?,'?');
     `;
     const insertJwtRow = await connection.query(
-      insertJwtQuery,
-      updateJwtTokenParams
+        insertJwtQuery,
+        updateJwtTokenParams
     );
     return insertJwtRow;
-  }
+}
 
 //회원정보수정 - 닉네임
 async function updateUserNickname(connection, userId, nickname) {
     const updateUserNicknameQuery = `UPDATE User SET name=? where Id=?;
                   `;
     const [userRows] = await connection.query(updateUserNicknameQuery, [
-      nickname,
-      userId,
+        nickname,
+        userId,
     ]);
     return userRows;
-  }
+}
 
 //회원정보수정 - 이메일
 async function updateUserEmail(connection, userId, email) {
     const updateUserEmailQuery = `UPDATE User SET userEmail=? where Id=?;
                   `;
     const [userRows] = await connection.query(updateUserEmailQuery, [
-      email,
-      userId,
+        email,
+        userId,
     ]);
     return userRows;
-  }
+}
 
-  //회원탈퇴
+//회원탈퇴
 async function updateUserStatus(connection, userId) {
     const updateUserStatusQuery = `UPDATE User SET status=1 WHERE Id=?;
                   `;
     const [userRows] = await connection.query(updateUserStatusQuery, [userId]);
     return userRows;
-  }
+}
 
 //jwt token 업데이트
 async function updateJwtToken(connection, updateJwtTokenParams) {

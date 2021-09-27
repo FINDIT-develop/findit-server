@@ -26,7 +26,7 @@ module.exports = function(app) {
     // 자동로그인
     app.get("app/login/auto", jwtMiddleware, user.autoLogin)
 
-      //로그아웃
+    //로그아웃
     app.patch("/app/logout", jwtMiddleware, user.logout);
 
     //사용자 프로필(마이페이지 조회) 조회
