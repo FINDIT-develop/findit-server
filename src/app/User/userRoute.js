@@ -24,7 +24,7 @@ module.exports = function(app) {
     app.post("/app/login/naver", user.naverLogin);
 
     // 자동로그인
-    app.get("app/login/auto", jwtMiddleware, user.autoLogin)
+    app.post("app/login/auto", jwtMiddleware, user.autoLogin)
 
     //로그아웃
     app.patch("/app/logout", jwtMiddleware, user.logout);
@@ -48,11 +48,7 @@ module.exports = function(app) {
     // 회원탈퇴 API
     app.patch("/app/users/:userId/status", jwtMiddleware, user.patchUserStatus);
 
+    // JWT 검증 API
+    app.get('/app/auto-login', jwtMiddleware, user.check);
+
 };
-
-
-// TODO: 자동로그인 API (JWT 검증 및 Payload 내뱉기)
-// JWT 검증 API
-// app.get('/app/auto-login', jwtMiddleware, user.check);
-
-// TODO: 탈퇴하기 API
