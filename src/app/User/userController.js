@@ -335,7 +335,7 @@ exports.check = async function(req, res) {
 
 /**
  * API No. 인증문자 전송
- * [POST] /app/users/phone-check
+ * [POST] /app/users/sms-send
  */
 exports.postPhoneCheck = async function(req, res) {
     const { userId, phone } = req.body;
@@ -358,7 +358,7 @@ exports.postPhoneCheck = async function(req, res) {
     const space = " "; // one space
     const newLine = "\n"; // new line
     const method = "POST"; // method
-    const serviceId = "ncp:sms:kr:264951710739:mangoplate_mock";
+    const serviceId = "ncp:sms:kr:273278440543:findit";
     const url = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
     const url2 = `/sms/v2/services/${serviceId}/messages`;
     const timestamp = Date.now().toString();
@@ -395,6 +395,12 @@ exports.postPhoneCheck = async function(req, res) {
                     to: `${phone}`,
                 }, ],
             },
+        }, function(err, res, html) {
+            if (err) console.log(err);
+            else {
+                resultCode = 200;
+                console.log(html);
+            }
         });
         return res.send(response(baseResponse.SUCCESS));
     } catch (err) {
