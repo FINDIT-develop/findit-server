@@ -27,7 +27,7 @@ exports.createUser = async function(email, password, name, phone) {
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, name, phone];
+        const insertUserInfoParams = [email, hashedPassword, name];
 
         const connection = await pool.getConnection(async(conn) => conn);
 

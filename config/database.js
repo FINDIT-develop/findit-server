@@ -3,11 +3,11 @@ const { logger } = require("./winston");
 
 // TODO: 본인의 DB 계정 입력
 const pool = mysql.createPool({
-    host: 'findit-rds.cfb8qbs4q57y.us-east-2.rds.amazonaws.com',
-    user: 'admin',
+    host: '3.36.170.76',
+    user: 'findit-admin',
     port: "3306",
-    password: 'findit12#',
-    database: 'findit',
+    password: 'vlselt12#',
+    database: 'finditDB',
 });
 
 module.exports = {

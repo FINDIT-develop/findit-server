@@ -30,22 +30,19 @@ exports.getTest = async function(req, res) {
 exports.postUsers = async function(req, res) {
 
     /**
-     * Body: email, password, name, phone
+     * Body: email, password, name
      */
     const {
         email,
         password,
         name,
-        password_check,
-        phone,
     } = req.body;
 
     // 빈 값 체크
     if (!email)
         return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
     if (!password) return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
-    if (!password_check)
-        return res.send(response(baseResponse.SIGNUP_PASSWORD_CHECK_EMPTY));
+
     if (!name) return res.send(response(baseResponse.SIGNUP_NICKNAME_EMPTY));
 
     // 길이 체크
@@ -53,14 +50,11 @@ exports.postUsers = async function(req, res) {
         return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
     if (password.length < 6 || password.length > 12)
         return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
-    if (password_check.length < 6 || password_check.length > 12)
-        return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
+
     if (name.length < 2)
         return res.send(response(baseResponse.SIGNUP_NICKNAME_LENGTH));
 
-    //비밀번호 일치 확인
-    if (password !== password_check)
-        return res.send(response(baseResponse.SIGNUP_PASSWORD_NOT_MATCH));
+
 
     // 형식 체크 (by 정규표현식)
     if (!regexEmail.test(email))
@@ -72,18 +66,13 @@ exports.postUsers = async function(req, res) {
     if (checkNumber < 0 || checkEnglish < 0) {
         return res.send(response(baseResponse.SIGNUP_PASSWORD_ERROR_TYPE));
     }
-    //번호 정규표현식 체크
-    var regPhone = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
-    if (!regPhone.test(phone))
-        return res.send(response(baseResponse.SIGNUP_PHONE_ERROR_TYPE));
-
 
 
     const signUpResponse = await userService.createUser(
         email,
         password,
         name,
-        phone
+
     );
 
     return res.send(signUpResponse);
@@ -231,7 +220,7 @@ exports.postUsersCheck = async function(req, res) {
     /**
      * Body: email, password, password_check
      */
-    const { email, password, password_check } = req.body;
+    const { email, password, password_check, } = req.body;
 
     // 빈 값 체크
     if (!email) return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));

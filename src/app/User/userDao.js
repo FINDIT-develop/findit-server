@@ -2,7 +2,7 @@
 async function selectUser(connection) {
     const selectUserListQuery = `
                   SELECT email, name 
-                  FROM USER;
+                  FROM User;
                   `;
     const [userRows] = await connection.query(selectUserListQuery);
     return userRows;
@@ -12,7 +12,7 @@ async function selectUser(connection) {
 async function selectUserEmail(connection, email) {
     const selectUserEmailQuery = `
                   SELECT email, name 
-                  FROM USER 
+                  FROM User 
                   WHERE email = ?;
                   `;
     const [emailRows] = await connection.query(selectUserEmailQuery, email);
@@ -25,7 +25,7 @@ async function selectUserEmail(connection, email) {
 async function selectUserId(connection, userId) {
     const selectUserIdQuery = `
                    SELECT id, email, name 
-                   FROM USER 
+                   FROM User 
                    WHERE id = ?;
                    `;
     const [userRow] = await connection.query(selectUserIdQuery, userId);
@@ -35,7 +35,7 @@ async function selectUserId(connection, userId) {
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
     const insertUserInfoQuery = `
-          INSERT INTO USER(email, password, name, phone)
+          INSERT INTO User(email, password, name)
           VALUES (?, ?, ?,?);
       `;
     const insertUserInfoRow = await connection.query(
@@ -50,7 +50,7 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 async function selectUserPassword(connection, selectUserPasswordParams) {
     const selectUserPasswordQuery = `
           SELECT email, name, password
-          FROM USER 
+          FROM User 
           WHERE email = ? AND password = ?;`;
     const selectUserPasswordRow = await connection.query(
         selectUserPasswordQuery,
@@ -64,7 +64,7 @@ async function selectUserPassword(connection, selectUserPasswordParams) {
 async function selectUserAccount(connection, email) {
     const selectUserAccountQuery = `
           SELECT id
-          FROM USER 
+          FROM User 
           WHERE email = ?;`;
     const selectUserAccountRow = await connection.query(
         selectUserAccountQuery,
@@ -75,7 +75,7 @@ async function selectUserAccount(connection, email) {
 
 async function updateUserInfo(connection, id, name) {
     const updateUserQuery = `
-    UPDATE USER 
+    UPDATE User 
     SET name = ?
     WHERE id = ?;`;
     const updateUserRow = await connection.query(updateUserQuery, [name, id]);
@@ -94,7 +94,7 @@ async function updateEmailVerify(connection, email) {
 //네이버 로그인
 async function insertNaverUser(connection, insertUserParams) {
     const insertEmailQuery = `
-    INSERT INTO USER(userEmail, name, phone, profileImg, loginType)
+    INSERT INTO User(email, name, phone, profileImg, loginType)
     VALUES(?, ?, ?, ?, 1);
     `;
     const insertEmailRow = await connection.query(
@@ -107,7 +107,7 @@ async function insertNaverUser(connection, insertUserParams) {
 //jwt status 업데이트
 async function updateJwtStatus(connection, userIdx) {
     const updateJwtStatusQuery = `
-UPDATE JWT SET status=1 where userId='?'
+UPDATE Token SET status=1 where userId='?'
 `;
     const updateJwtStatusRow = await connection.query(
         updateJwtStatusQuery,
@@ -120,7 +120,7 @@ UPDATE JWT SET status=1 where userId='?'
 //login user 조회
 async function selectLoginUser(connection, userId) {
     const selectJwtQuery = `
-    SELECT userId, status FROM JWT WHERE userId='?';
+    SELECT userId, status FROM Token WHERE userId='?';
     `;
     const selectJwtRow = await connection.query(selectJwtQuery, userId);
     return selectJwtRow;
@@ -129,7 +129,7 @@ async function selectLoginUser(connection, userId) {
 //login 추가
 async function insertLoginUser(connection, updateJwtTokenParams) {
     const insertJwtQuery = `
-    INSERT INTO JWT(token, userId) VALUES(?,'?');
+    INSERT INTO Token(jwt, userId) VALUES(?,'?');
     `;
     const insertJwtRow = await connection.query(
         insertJwtQuery,
@@ -140,7 +140,7 @@ async function insertLoginUser(connection, updateJwtTokenParams) {
 
 //회원정보수정 - 닉네임
 async function updateUserNickname(connection, userId, nickname) {
-    const updateUserNicknameQuery = `UPDATE USER SET name=? where Id=?;
+    const updateUserNicknameQuery = `UPDATE User SET name=? where Id=?;
                   `;
     const [userRows] = await connection.query(updateUserNicknameQuery, [
         nickname,
@@ -151,7 +151,7 @@ async function updateUserNickname(connection, userId, nickname) {
 
 //회원정보수정 - 이메일
 async function updateUserEmail(connection, userId, email) {
-    const updateUserEmailQuery = `UPDATE USER SET userEmail=? where Id=?;
+    const updateUserEmailQuery = `UPDATE User SET userEmail=? where Id=?;
                   `;
     const [userRows] = await connection.query(updateUserEmailQuery, [
         email,
@@ -162,7 +162,7 @@ async function updateUserEmail(connection, userId, email) {
 
 //회원탈퇴
 async function updateUserStatus(connection, userId) {
-    const updateUserStatusQuery = `UPDATE USER SET status=1 WHERE Id=?;
+    const updateUserStatusQuery = `UPDATE User SET status=1 WHERE Id=?;
                   `;
     const [userRows] = await connection.query(updateUserStatusQuery, [userId]);
     return userRows;
@@ -171,7 +171,7 @@ async function updateUserStatus(connection, userId) {
 //jwt token 업데이트
 async function updateJwtToken(connection, updateJwtTokenParams) {
     const updateJwtTokenQuery = `
-  UPDATE JWT SET token=?, status=0 where id=?
+  UPDATE Token SET token=?, status=0 where id=?
   `;
     const updateJwtTokenRow = await connection.query(
         updateJwtTokenQuery,
