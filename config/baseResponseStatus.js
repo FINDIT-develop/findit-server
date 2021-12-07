@@ -21,7 +21,7 @@ module.exports = {
 
     //Request error
     SIGNUP_UID_EMPTY: { isSuccess: false, code: 2001, message: "UID를 입력해주세요." },
-
+    PRODUCT_ID_EMPTY: { isSuccess: false, code: 2002, message: "제품ID를 입력해주세요." },
 
     //Reponse error
 

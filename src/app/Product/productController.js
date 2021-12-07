@@ -20,3 +20,16 @@ exports.getProducts = async function(req, res) {
 
     return res.send(response(baseResponse.SUCCESS, productsResult));
 }
+
+/**
+ * API No. 제품 전체 조회 API
+ * [POST] /app/products/:productId
+ */
+exports.getProductById = async function(req, res) {
+    const productId = req.params.productId;
+
+    if (!productId) return res.send(response(baseResponse.PRODUCT_ID_EMPTY));
+    const productResult = await productProvider.retrieveProductById(productId);
+
+    return res.send(response(baseResponse.SUCCESS, productResult));
+}

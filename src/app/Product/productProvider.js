@@ -8,8 +8,15 @@ const productDao = require("./productDao");
 exports.retrieveProduct = async function() {
     const connection = await pool.getConnection(async(conn) => conn);
     const ProductResult = await productDao.selectProduct(connection);
-
     connection.release();
 
     return ProductResult;
 };
+
+exports.retrieveProductById = async function(productId) {
+    const connection = await pool.getConnection(async(conn) => conn);
+    const ProductResult = await productDao.selectProductById(connection, productId);
+    connection.release();
+
+    return ProductResult[0];
+}
