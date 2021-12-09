@@ -19,7 +19,28 @@ async function selectProductById(connection, productId) {
     return productRows;
 }
 
+async function selectLike(connection, userId, productId) {
+    const selectLikeQuery = `SELECT * FROM ProductLike WHERE userId = ? AND productId = ? ;`;
+    const LikeRows = await connection.query(selectLikeQuery, [userId, productId]);
+    return LikeRows;
+}
+
+async function insertLike(connection, userId, productId) {
+    const selectLikeQuery = `INSERT INTO ProductLike(userId, productId) VALUES(?, ?);`;
+    const LikeRows = await connection.query(selectLikeQuery, [userId, productId]);
+    return LikeRows;
+}
+
+async function deleteLike(connection, userId, productId) {
+    const selectLikeQuery = `DELETE FROM ProductLike WHERE userId = ? AND productId = ?;`;
+    const LikeRows = await connection.query(selectLikeQuery, [userId, productId]);
+    return LikeRows;
+}
+
 module.exports = {
     selectProduct,
-    selectProductById
+    selectProductById,
+    selectLike,
+    insertLike,
+    deleteLike,
 }

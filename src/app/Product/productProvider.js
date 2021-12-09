@@ -20,3 +20,12 @@ exports.retrieveProductById = async function(productId) {
 
     return ProductResult[0];
 }
+
+exports.retrieveLike = async function(userId, productId) {
+    const connection = await pool.getConnection(async(conn) => conn);
+    const ProductResult = await productDao.selectLike(connection, userId, productId);
+    connection.release();
+
+    return ProductResult;
+
+}
