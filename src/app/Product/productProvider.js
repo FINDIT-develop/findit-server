@@ -5,9 +5,9 @@ const { logger } = require("../../../config/winston");
 const productDao = require("./productDao");
 
 // Provider: Read 비즈니스 로직 처리
-exports.retrieveProduct = async function() {
+exports.retrieveProduct = async function(category) {
     const connection = await pool.getConnection(async(conn) => conn);
-    const ProductResult = await productDao.selectProduct(connection);
+    const ProductResult = await productDao.selectProduct(connection, category);
     connection.release();
 
     return ProductResult;

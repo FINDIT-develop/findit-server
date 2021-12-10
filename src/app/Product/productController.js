@@ -16,7 +16,11 @@ const jwt = require("jsonwebtoken");
  */
 exports.getProducts = async function(req, res) {
 
-    const productsResult = await productProvider.retrieveProduct();
+    const category = req.query.category;
+
+    if (category < 0 && category > 6)
+        return res.send(response(baseResponse.CATEGORY_ERROR_TYPE));
+    const productsResult = await productProvider.retrieveProduct(category);
 
     return res.send(response(baseResponse.SUCCESS, productsResult));
 }

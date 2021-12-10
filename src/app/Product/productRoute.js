@@ -5,9 +5,6 @@ module.exports = function(app) {
     // 전체 제품 조회
     app.get('/app/products', product.getProducts);
 
-    // // 카테고리별 제품 조회
-    // app.get('/app/products', product.getProductByCategory);
-
     // 제품 상세 조회
     app.get('/app/products/:productId', product.getProductById);
 
