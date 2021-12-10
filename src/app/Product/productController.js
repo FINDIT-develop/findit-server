@@ -16,7 +16,11 @@ const jwt = require("jsonwebtoken");
  */
 exports.getProducts = async function(req, res) {
 
-    const productsResult = await productProvider.retrieveProduct();
+    const category = req.query.category;
+
+    if (category < 0 && category > 6)
+        return res.send(response(baseResponse.CATEGORY_ERROR_TYPE));
+    const productsResult = await productProvider.retrieveProduct(category);
 
     return res.send(response(baseResponse.SUCCESS, productsResult));
 }
@@ -32,4 +36,17 @@ exports.getProductById = async function(req, res) {
     const productResult = await productProvider.retrieveProductById(productId);
 
     return res.send(response(baseResponse.SUCCESS, productResult));
+}
+
+
+exports.postProductLike = async function(req, res) {
+    const { firebaseUID, productId } = req.body;
+
+    if (!firebaseUID) return (response(baseResponse.USER_ID_EMPTY));
+    if (!productId) return res.send(response(baseResponse.PRODUCT_ID_EMPTY));
+
+    const productLikeResponse = await productService.postLike(firebaseUID, productId);
+
+    return res.send(productLikeResponse);
+
 }

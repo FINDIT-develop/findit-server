@@ -20,10 +20,13 @@ module.exports = {
     },
 
     //Request error
-    SIGNUP_UID_EMPTY: { isSuccess: false, code: 2001, message: "UID를 입력해주세요." },
+    USER_ID_EMPTY: { isSuccess: false, code: 2001, message: "UID를 입력해주세요." },
     PRODUCT_ID_EMPTY: { isSuccess: false, code: 2002, message: "제품ID를 입력해주세요." },
+    CATEGORY_ERROR_TYPE: { isSuccess: false, code: 2003, message: "카테고리가 맞지 않습니다." },
 
     //Reponse error
+    USER_NOT_EXIST: { isSuccess: false, code: 3001, message: "유저가 존재하지 않습니다." },
+    PRODUCT_NOT_EXIST: { isSuccess: false, code: 2002, message: "제품이 존재하지 않습니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR: { isSuccess: false, code: 4000, message: "데이터 베이스 에러" },
